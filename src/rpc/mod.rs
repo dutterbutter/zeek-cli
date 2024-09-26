@@ -1,4 +1,4 @@
-pub mod proofs;
+pub mod gas;
 
 // Common structs and functions for RPC requests
 use serde::{Deserialize, Serialize};
@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 pub struct RpcRequest<'a> {
     pub jsonrpc: &'static str,
     pub method: &'a str,
-    pub params: serde_json::Value,
+    pub params: Vec<serde_json::Value>,
     pub id: u32,
 }
 

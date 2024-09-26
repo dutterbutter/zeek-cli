@@ -1,13 +1,18 @@
-use clap::Parser;
 use anyhow::Result;
+use clap::Parser;
 mod commands;
 mod rpc;
-mod utils;
+
+pub const DEFAULT_RPC_URL: &str = "https://mainnet.era.zksync.io";
 
 #[derive(Parser)]
 #[command(name = "zeek")]
 #[command(about = "CLI tool for ZKsync", long_about = None)]
 struct Cli {
+    /// The RPC URL to use (defaults to https://mainnet.era.zksync.io)
+    #[arg(long, global = true, default_value = DEFAULT_RPC_URL)]
+    rpc_url: String,
+
     #[command(subcommand)]
     command: commands::Commands,
 }
@@ -17,8 +22,8 @@ async fn main() -> Result<()> {
     let cli = Cli::parse();
     // Handle the command for Proof
     match &cli.command {
-        commands::Commands::Proof(proof_args) => {
-            commands::proofs::handle_proof(proof_args).await?;
+        commands::Commands::Gas(gas_cmd) => {
+            commands::gas::handle_gas_command(gas_cmd, &cli.rpc_url).await?;
         }
     }
 
